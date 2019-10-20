@@ -11,9 +11,13 @@
 
 移动光标到插件载入处按gl
 
+![](https://raw.githubusercontent.com/jiazhoulvke/vim-plug-helper.vim/master/screenshots/gl.gif)
+
 ## 跳转 ##
 
 移动光标到插件载入处按gs，会跳转到插件配置处，再按gs会跳回原位
+
+![](https://raw.githubusercontent.com/jiazhoulvke/vim-plug-helper.vim/master/screenshots/gs.gif)
 
 ## 注意事项 ##
 
