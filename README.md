@@ -117,7 +117,7 @@ xmap S <Plug>VSurround
 
 `let g:vim_plug_helper_no_maps = 1`
 
-然后自己绑定按键到这两个函数:
+然后自己绑定按键到这3个函数:
 
 * `VimPlugHelperOpenLink`
 * `VimPlugHelperSwitch`
