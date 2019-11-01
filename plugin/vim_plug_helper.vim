@@ -32,6 +32,32 @@ function! s:IsPluginLine(str)
 	return 0
 endfunction
 
+function! VimPlugHelperOpenDir()
+	let curline = getline('.')
+	if !s:IsPluginLine(curline)
+		return
+	endif
+	let ml = matchlist(curline, '^\s*Plug\s\+'."'".'\(.\{-}\)'."'")
+	if len(ml) == 0
+		return
+	endif
+	let p = ml[1]
+	if s:IsLocalPath(ml[1])
+		let p = expand(ml[1])
+	elseif s:IsPartURL(ml[1])
+		let pl = split(ml[1], '/')
+		let p = g:plug_home.'/'.pl[1]
+	endif
+	echo p
+	if s:IsWindows()
+		execute 'silent ! explorer ' . p
+	elseif s:IsMacOS()
+		call system('open ' . shellescape(p) . ' &')
+	else
+		call system('xdg-open ' . shellescape(p) . ' &')
+	endif
+endfunction
+
 function! VimPlugHelperOpenLink() 
 	let curline = getline('.')
 	if !s:IsPluginLine(curline)
@@ -163,6 +189,7 @@ endfunction
 function! s:Setting()
 	nnoremap<silent><buffer> gl :call VimPlugHelperOpenLink()<CR>
 	nnoremap<silent><buffer> gs :call VimPlugHelperSwitch()<CR>
+	nnoremap<silent><buffer> gd :call VimPlugHelperOpenDir()<CR>
 endfunction
 
 if !exists('g:vim_plug_helper_no_maps')

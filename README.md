@@ -1,4 +1,4 @@
-# vim-plug-helper #
+# vim-plug-helper
 
 装的插件多了以后管理配置是个很麻烦的事。如果你像我一样使用[vim-plug](https://github.com/junegunn/vim-plug)来管理插件的话，这个辅助插件也许可以帮到你。
 
@@ -7,19 +7,23 @@
 * 打开插件的GitHub页面(如果是本地插件则用系统默认的文件管理器打开所在路径)
 * 快速在插件载入处和插件配置处切换
 
-## 打开Github页面 ##
+## 打开Github页面
 
 移动光标到插件载入处按gl
 
 ![](https://raw.githubusercontent.com/jiazhoulvke/vim-plug-helper.vim/master/screenshots/gl.gif)
 
-## 跳转 ##
+## 跳转
 
 移动光标到插件载入处按gs，会跳转到插件配置处，再按gs会跳回原位
 
 ![](https://raw.githubusercontent.com/jiazhoulvke/vim-plug-helper.vim/master/screenshots/gs.gif)
 
-## 注意事项 ##
+## 打开插件所在目录
+
+移动光标到插件载入处按gd
+
+## 注意事项
 
 我的配置都是这样的: 
 
@@ -99,12 +103,13 @@ xmap S <Plug>VSurround
 }}}
 ```
 
-## 配置 ##
+## 配置
 
-默认绑定了两个快捷键:
+默认绑定了3个快捷键:
 
 * gl 打开插件的GitHub页面
 * gs 跳转
+* gd 打开插件所在目录
 
 默认只会对文件名为init.vim,ginit.vim,.vimrc,_vimrc生效
 
@@ -116,6 +121,7 @@ xmap S <Plug>VSurround
 
 * `VimPlugHelperOpenLink`
 * `VimPlugHelperSwitch`
+* `VimPlugHelperOpenDir`
 
 比如:
 
@@ -125,6 +131,7 @@ let g:vim_plug_helper_no_maps = 1
 function! s:VPHSetting()
 	nnoremap<silent><buffer> <C-l> :call VimPlugHelperOpenLink()<CR>
 	nnoremap<silent><buffer> <C-s> :call VimPlugHelperSwitch()<CR>
+	nnoremap<silent><buffer> <C-d> :call VimPlugHelperOpenDir()<CR>
 endfunction
 
 au! BufRead,BufEnter init.vim,ginit.vim,.vimrc,_vimrc call s:VPHSetting()
