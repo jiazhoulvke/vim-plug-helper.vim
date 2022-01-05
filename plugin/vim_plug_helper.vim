@@ -3,6 +3,8 @@ if exists("g:loaded_vim_plug_helper") || &cp
 endif
 let g:loaded_vim_plug_helper = 1
 
+let g:match_plug_line = '^\s*"*\s*Plug\s\+'."'".'\(.\{-}\)'."'" 
+
 function! s:IsWindows()
 	return has("win32") || has("win64")
 endfunction
@@ -26,7 +28,7 @@ function! s:IsPartURL(str)
 endfunction
 
 function! s:IsPluginLine(str)
-	if match(a:str, '^\s*Plug\s\+'."'".'\(.\{-}\)'."'") > -1
+	if match(a:str, g:match_plug_line) > -1
 		return 1
 	endif
 	return 0
@@ -37,7 +39,7 @@ function! VimPlugHelperOpenDir()
 	if !s:IsPluginLine(curline)
 		return
 	endif
-	let ml = matchlist(curline, '^\s*Plug\s\+'."'".'\(.\{-}\)'."'")
+	let ml = matchlist(curline, g:match_plug_line)
 	if len(ml) == 0
 		return
 	endif
@@ -63,7 +65,7 @@ function! VimPlugHelperOpenLink()
 	if !s:IsPluginLine(curline)
 		return
 	endif
-	let ml = matchlist(curline, '^\s*Plug\s\+'."'".'\(.\{-}\)'."'")
+	let ml = matchlist(curline, g:match_plug_line)
 	if len(ml) == 0
 		return
 	endif
@@ -92,7 +94,7 @@ function! VimPlugHelperGotoConfig()
 	let sline = curline
 	let curlen = 0
 	while 1
-		let result = matchstr(sline, '\s*\(Plug\s\{-}'."'".'.\{-}'."'".'\)')
+		let result = matchstr(sline, '\s*"*\s*\(Plug\s\{-}'."'".'.\{-}'."'".'\)')
 		if result == "" || curcol < curlen
 			break
 		endif
@@ -101,7 +103,7 @@ function! VimPlugHelperGotoConfig()
 		let sline = strpart(sline, strlen(result))
 	endwhile
 	" echo matched_plugin
-	let ml = matchlist(matched_plugin, '\s*Plug\s\+'."'".'\(.\{-}\)'."'")
+	let ml = matchlist(matched_plugin, '\s*"*\s*Plug\s\+'."'".'\(.\{-}\)'."'")
 	if len(ml) == 0
 		return
 	endif
@@ -116,18 +118,9 @@ function! VimPlugHelperGotoConfig()
 	if match(plugin_name, '.n\?vim$') > -1
 		let match_strs = add(match_strs, substitute(plugin_name, '.n\?vim$','',''))
 	endif
-	" if match(plugin_name, '.nvim$') > -1
-	" 	let match_strs = add(match_strs, substitute(plugin_name, '.nvim$','',''))
-	" endif
 	if match(plugin_name, '^vim-') > -1
 		let npstr = substitute(plugin_name, '^vim-','','')
 		let match_strs = add(match_strs, npstr)
-		" if match(npstr, '.vim$') > -1
-		" 	let match_strs = add(match_strs, substitute(npstr, '.vim$','',''))
-		" endif
-		" if match(npstr, '.nvim$') > -1
-		" 	let match_strs = add(match_strs, substitute(npstr, '.nvim$','',''))
-		" endif
 	endif
 	let ml = matchlist(plugin_name, '^vim-\(.\+\).n\?vim$')
 	if len(ml)>0
@@ -169,7 +162,7 @@ function! VimPlugHelperGotoDefine()
 	endif
 	call reverse(match_strs)
 	for match_str in match_strs
-		let sr = search('\s*Plug\s\+'."'".match_str."'", 'bwz')
+		let sr = search('\s*"*\s*Plug\s\+'."'".match_str."'", 'bwz')
 		if sr > 0
 			call cursor(sr, 1)
 			break
@@ -189,9 +182,9 @@ endfunction
 function! s:Setting()
 	nnoremap<silent><buffer> gl :call VimPlugHelperOpenLink()<CR>
 	nnoremap<silent><buffer> gs :call VimPlugHelperSwitch()<CR>
-	nnoremap<silent><buffer> gd :call VimPlugHelperOpenDir()<CR>
+	nnoremap<silent><buffer> go :call VimPlugHelperOpenDir()<CR>
 endfunction
 
 if !exists('g:vim_plug_helper_no_maps')
-	au! BufRead,BufEnter init.vim,ginit.vim,.vimrc,_vimrc call s:Setting()
+	au! BufRead,BufEnter *.vim,.vimrc,_vimrc call s:Setting()
 endif
